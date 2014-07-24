@@ -136,6 +136,8 @@ function rebote_paleta()
 	
 end
 
+
+
 function puntaje()
 	local dir_x = 20
 	local dir_y = 20 
@@ -147,10 +149,14 @@ function puntaje()
 	if ax1 <= bx1 then  --pared de la derecha
 		--puntaje para el cpu
 		puntos.CPU = puntos.CPU + 1 
+		pelota.x = fx/2
+		pelota.y = fy/2
 	end
 	if ax2 >= bx2 then --pared de la izquierda
 		--puntaje para el usuario
 		puntos.usuario = puntos.usuario  + 1 
+		pelota.x = fx/2
+		pelota.y = fy/2
 	end
 	
 end
@@ -224,7 +230,9 @@ temporizador( )
 --
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+function teclas_pong( ... )
+	-- body
+end
 
 
 
