@@ -169,11 +169,14 @@ function handler (evt)
 	then
 		-- Solo las flechas que mueven al mono
 		if evt.key == 'CURSOR_UP' then
-			pong_user.y = pong_user.y - 10
+			if ( (pong_user.y - 10 ) >= 0 )then
+				pong_user.y = pong_user.y - 10
+			end
 		elseif evt.key == 'CURSOR_DOWN' then
-			pong_user.y = pong_user.y + 10
+			if ( (pong_user.y +10 ) <= ( fy - pong_user.dy ) )then
+				pong_user.y = pong_user.y + 10
+			end
 		end
-
         -- evaluar si el mono está sobre la banana
 		--choque()
 	end

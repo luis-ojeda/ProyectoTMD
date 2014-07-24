@@ -67,12 +67,12 @@ end
 
 --canvas:drawRect (mode, x, y, w, h)
 --crea la pocicion inicial del las paletas del pong
-local x = 500
-local y = 300
-local width =200   --ega as dimensões da região
-local height = 200
+local x = 500 --posicion inicial del cuadro de juego
+local y = 300 --posicion inicial del cuadro de juego
+local width =200  	--ancho  del cuadro de juego
+local height = 200  --alto  del cuadro de juego
 local fx, fy = width, height 
-local pong_user = { x=10, y=10, dx=20, dy=50 }
+local pong_user = { x= 10, y=10, dx=20, dy=50 }
 local pong_cpu = { x=fx-30, y=10, dx=20, dy=50 }
 
 local puntos= {usuario = 0, CPU = 0}
@@ -331,9 +331,13 @@ function teclas_pong( evt)
 		-- Solo las flechas que mueven la paleta
 		
 		if evt.key == 'CURSOR_UP' then
-			pong_user.y = pong_user.y - 10
+			if ( (pong_user.y - 10 ) >= 0 )then
+				pong_user.y = pong_user.y - 10
+			end
 		elseif evt.key == 'CURSOR_DOWN' then
-			pong_user.y = pong_user.y + 10
+			if ( (pong_user.y +10 ) <= ( fy - pong_user.dy ) )then
+				pong_user.y = pong_user.y + 10
+			end
 		end
 
         -- evaluar si el mono está sobre la banana
