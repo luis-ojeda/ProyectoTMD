@@ -6,7 +6,7 @@
 <regionBase>
 	<region left="0%" right="0%" top="0%" bottom="0%" id="videoreg" zindex="1"/>
 	    <region width="20%"  height="20%"  left="10%"  top="40%" id="rgWin" zindex="3"/>
-	    <region width="50%"  height="50%"  right="10%" top="25%" id="rgLua" zindex="2"/>
+	    <region left="0%" right="0%" top="0%" bottom="0%" id="rgLua" zindex="2"/>
 </regionBase>
 
 <descriptorBase>

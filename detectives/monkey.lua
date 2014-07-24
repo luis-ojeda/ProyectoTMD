@@ -1,44 +1,61 @@
---genera las imagenes de los botones
--- info: guarda la imagen, posicion inicial y dimensiones
-local width, height = canvas:attrSize()   -- pega as dimensões da região
-local fx, fy = width, height 
-
 
 local img = canvas:new('monkey.png')
 local dx, dy = img:attrSize()
-local info = { img=img, x=fx -50, y=fy -50, dx=dx, dy=dy }
+--local info = { img=img, x=fx -50, y=fy -50, dx=dx, dy=dy }
+local width, height = canvas:attrSize()   -- pega as dimensões da região
+local Bx, By = width, height 
 
 
 --variable para mantener el tiempo de reproduccion del archivo y poder manejar las propagandas
 local tiempo = {horas= 0, minutos= 0, segundos= 0, milisegundos= 0}
 
-
---canvas:drawRect (mode, x, y, w, h)
---crea la pocicion inicial del las paletas del pong
-
-local pong_user = { x=10, y=10, dx=20, dy=50 }
-local pong_cpu = { x=fx-30, y=10, dx=20, dy=50 }
-
-local puntos= {usuario = 0, CPU = 0}
-
-local pelota = { x=fx/2, y=fy/2, dx=20, dy=20 , dir_x = -10 ,dir_y= 10 }
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--
+--																					fUNCIONES GLOBALES
+--
+--
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
---obtiene valores de la region
---local width, height = canvas:attrSize()   -- pega as dimensões da região
---local fx, fy = width, height 
-local fondo = { x=0, y=0, dx=fx-10, dy=fy -10} -- genera una area en la cual este contenido todo 
 
--- Función de redibujado:
--- Llamada por cada tecla presionada
--- primero el fondo, luego la banana y al final el mono
-function redraw ()
-	redraw_pong()
+
+--variable encargada de definir el tiempo en que se pasa  a modo reclame
+local tiempo_reclame={
+						horas_inicio= 0+0, 
+						horas_fin= 0+0, 
+						minutos_inicio= 0+0, 
+						minutos_fin= 0+0, 
+						segundos_inicio= 3+0, 
+						segundos_fin= 30+0,
+						milisegundos_inicio= 0+0,
+						milisegundos_fin= 0+0
+					}
+
+--funcion destinada a saber si se esta en periodo de reclame sie esta en reclame es verdadero sino es falso
+function compara_tiempo_reclame( )
+	if 	(tiempo_reclame.horas_inicio <= tiempo.horas)  and (tiempo.horas <=tiempo_reclame.horas_fin) then
+		if 	(tiempo_reclame.minutos_inicio <= tiempo.minutos)  and (tiempo.minutos <=tiempo_reclame.minutos_fin) then
+			if 	(tiempo_reclame.segundos_inicio <= tiempo.segundos)  and (tiempo.segundos <=tiempo_reclame.segundos_fin) then
+				return true
+			end
+		end
+	end
+	return false
 end
 
--- Funcao de colisión:
--- llamada por cada tecla presionada
--- evalúa si el mono está encima de la banana
+
+
+
+function redraw ()
+	if compara_tiempo_reclame()  then
+		redraw_pong()
+	else
+		redraw_detective()
+	end
+end
+
+
+
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -48,16 +65,53 @@ end
 --
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+--canvas:drawRect (mode, x, y, w, h)
+--crea la pocicion inicial del las paletas del pong
+local x = 500
+local y = 300
+local width =200   --ega as dimensões da região
+local height = 200
+local fx, fy = width, height 
+local pong_user = { x=10, y=10, dx=20, dy=50 }
+local pong_cpu = { x=fx-30, y=10, dx=20, dy=50 }
+
+local puntos= {usuario = 0, CPU = 0}
+
+
+--obtiene valores de la region
+--local width, height = canvas:attrSize()   -- pega as dimensões da região
+--local fx, fy = width, height 
+local fondo = { x=0, y=0, dx=fx-10, dy=fy -10} -- genera una area en la cual este contenido todo 
+
+local pelota = { x=fx/2, y=fy/2, dx=20, dy=20 , dir_x = -10 ,dir_y= 10 }
+
+
+
+function timer_pong( ... )
+	-- body
+	mover_pelota( )
+	mover_pong_cpu()
+	rebote_paleta()
+	puntaje()
+end
+
+
+
 function redraw_pong()
+	canvas:clear()
+
 	canvas:attrColor('white')
-	canvas:drawRect('fill', 0,0, canvas:attrSize())
+	canvas:drawRect('fill', x,y,fx,fy)
 	canvas:attrColor('black')
-	canvas:drawRect ('fill', pelota.x, pelota.y, pelota.dx,pelota.dy)
-	canvas:drawRect ('fill', pong_user.x, pong_user.y, pong_user.dx,pong_user.dy)
-	canvas:drawRect ('fill', pong_cpu.x, pong_cpu.y, pong_cpu.dx,pong_cpu.dy)
+	canvas:drawRect ('fill', x + pelota.x, y + pelota.y, pelota.dx,pelota.dy)
+	canvas:drawRect ('fill', x + pong_user.x, y + pong_user.y, pong_user.dx,pong_user.dy)
+	canvas:drawRect ('fill', x + pong_cpu.x, y + pong_cpu.y, pong_cpu.dx,pong_cpu.dy)
 	canvas:attrFont("vera", 24)
-	canvas:drawText(40, 10, tostring (puntos.usuario) )
-	canvas:drawText(fx-40, 10, tostring (puntos.CPU) )
+	canvas:drawText(x + 40, y + 10, tostring (puntos.usuario) )
+	canvas:drawText(x + fx-40, y + 10, tostring (puntos.CPU) )
+	canvas:attrColor(0xBF,0xBF,0xBF,0x00)
+	--canvas:drawText(fx/2,fy/2-30, tostring (tiempo.segundos))   ---para realizar pruebas
+	--canvas:drawText(fx/2,fy/2, compara_tiempo_reclame())			-- para realizar pruebas
 	canvas:flush()
 end
 
@@ -87,7 +141,7 @@ end
 local IGNORE = false
 
 --funcion que mueve el objeto a trapar
-function mover_objeto( )
+function mover_pelota( )
 	-- body
 	local dir_x = 20
 	local dir_y = 20
@@ -161,6 +215,49 @@ function puntaje()
 	
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--
+--																					Detective
+--
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+local mostrar_info = -1
+
+local parametros_cuadro_texto={x = 40, y=40, w=100, h=200}
+
+--imagen del boton de info
+local img = canvas:new('./imagenes/boton_info.gif')
+local dx, dy = img:attrSize()
+local info_boton = { img=img, x= 50, y=By -50 }
+
+
+function redraw_detective()
+	
+	canvas:clear()
+	canvas:compose(info_boton.x, info_boton.y, info_boton.img)
+	canvas:attrColor(0xBF,0xBF,0xBF,0x00)
+	if mostrar_info == 1 then
+
+		canvas:attrColor(0xBF,0xBF,0xBF,0xF0)
+		canvas:drawRect('fill', parametros_cuadro_texto.x , parametros_cuadro_texto.y , parametros_cuadro_texto.w , parametros_cuadro_texto.h )
+		canvas:attrColor('black')
+		canvas:attrFont("vera", 24)
+		canvas:drawText(parametros_cuadro_texto.x + 5 , parametros_cuadro_texto.y + 5, "asdas\ndasd")   ---para realizar pruebas
+		canvas:attrColor(0xBF,0xBF,0xBF,0x00)
+		--canvas:drawText(fx/2,fy/2, compara_tiempo_reclame())			-- para realizar pruebas
+		
+	else
+		--canvas:attrColor(0,0,0,0)
+		--canvas:attrColor("red",0x00)
+		--canvas:drawRect('fill', 10 , 10,20,30)
+		
+	end
+	canvas:flush()
+end
+
+
+redraw_detective()
+
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -182,10 +279,7 @@ function temporizador ()
 	else
 		return event.timer(frecuencia_reloj,
 			function()
-				mover_objeto( )
-				mover_pong_cpu()
-				rebote_paleta()
-				puntaje()
+				timer_pong()
 				redraw()
 				reloj()
 				temporizador( )
@@ -222,7 +316,6 @@ end
 
 temporizador( )
 
-
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
 --																					Manejo de eventos de tecla
@@ -230,23 +323,13 @@ temporizador( )
 --
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function teclas_pong( ... )
+function teclas_pong( evt)
 	-- body
-end
-
-
-
-
--- Funcion de tratamiento de eventos:
-function handler (evt)
-	if IGNORE then
-		return
-	end
-	
 	-- Sólo eventos de tecla son de interes
 	if evt.class == 'key' and evt.type == 'press'
 	then
-		-- Solo las flechas que mueven al mono
+		-- Solo las flechas que mueven la paleta
+		
 		if evt.key == 'CURSOR_UP' then
 			pong_user.y = pong_user.y - 10
 		elseif evt.key == 'CURSOR_DOWN' then
@@ -256,6 +339,34 @@ function handler (evt)
         -- evaluar si el mono está sobre la banana
 		--choque()
 	end
+end
+
+function teclas_info( evt)
+	 --Sólo eventos de tecla son de interes
+	if evt.class == 'key' and evt.type == 'press'
+	then
+		-- Solo las flechas que muestra la info
+		if evt.key == 'CURSOR_UP' then
+			
+			mostrar_info= -mostrar_info
+		end
+	end
+end
+
+
+
+-- Funcion de tratamiento de eventos:
+function handler (evt)
+	if IGNORE then
+		return
+	end
+
+	if compara_tiempo_reclame() then
+		teclas_pong(evt)
+	else
+		teclas_info(evt)
+	end
+	
 
     -- redesenha a tela toda
     --redraw()
