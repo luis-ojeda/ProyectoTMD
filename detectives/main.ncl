@@ -27,7 +27,7 @@
 <body>
     <port id="entryPoint" component="video"/>
 
-    <media id="video" src="./resources/FooFighters-Rope.mp4" descriptor="videodesc"/>
+    <media id="video" src="./resources/DC001.mp4" descriptor="videodesc"/>
 	<media type="application/x-ginga-settings" id="programSettings">
         <property name="service.currentKeyMaster" value="luaIdx"/>
 	</media>

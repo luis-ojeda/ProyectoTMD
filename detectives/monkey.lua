@@ -26,8 +26,8 @@ local tiempo_reclame={
 						horas_fin= 0+0, 
 						minutos_inicio= 0+0, 
 						minutos_fin= 0+0, 
-						segundos_inicio= 3+0, 
-						segundos_fin= 30+0,
+						segundos_inicio= 30+0, 
+						segundos_fin= 31+0,
 						milisegundos_inicio= 0+0,
 						milisegundos_fin= 0+0
 					}
@@ -369,8 +369,9 @@ function redraw_detective()
 		canvas:attrColor(0xBF,0xBF,0xBF,0xF0)
 		canvas:drawRect('fill', parametros_cuadro_texto.x , parametros_cuadro_texto.y , parametros_cuadro_texto.w , parametros_cuadro_texto.h )
 		canvas:attrColor('black')
-		canvas:attrFont("vera", 24)
-		canvas:drawText(parametros_cuadro_texto.x + 5 , parametros_cuadro_texto.y + 5, "asdas\ndasd")   ---para realizar pruebas
+		canvas:attrFont("vera", 12)
+		--insertarla informacion que se desea mostrar puede tener el texto un largo maximo de 12 caracteres
+		canvas:drawText(parametros_cuadro_texto.x + 5 , parametros_cuadro_texto.y + 5, "a12345678901\n23456")   ---para realizar pruebas
 		canvas:attrColor(0xBF,0xBF,0xBF,0x00)
 		--canvas:drawText(fx/2,fy/2, compara_tiempo_reclame())			-- para realizar pruebas
 		
