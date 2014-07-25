@@ -4,8 +4,9 @@ local dx, dy = img:attrSize()
 --local info = { img=img, x=fx -50, y=fy -50, dx=dx, dy=dy }
 local width, height = canvas:attrSize()   -- pega as dimensões da região
 local Bx, By = width, height 
+local IGNORE = false 
 
-
+local easter_egg_activate = 0
 --variable para mantener el tiempo de reproduccion del archivo y poder manejar las propagandas
 local tiempo = {horas= 0, minutos= 0, segundos= 0, milisegundos= 0}
 
@@ -47,11 +48,138 @@ end
 
 
 function redraw ()
-	if compara_tiempo_reclame()  then
-		redraw_pong()
+	if easter_egg_activate == 0 then
+		if compara_tiempo_reclame()  then
+			redraw_pong()
+		else
+			redraw_detective()
+		end
 	else
-		redraw_detective()
+			redraw_easter_egg()
 	end
+end
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--
+--																				EASTER EGG
+--
+--
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+-- MONKEY: guarda la imagen, posicion inicial y dimensiones
+local img = canvas:new('monkey.png')
+local dx, dy = img:attrSize()
+local monkey = { img=img, x=10, y=10, dx=dx, dy=dy }
+
+-- BANANA: guarda la imagen, posicion inicial y dimensiones
+local img = canvas:new('banana.png')
+local dx, dy = img:attrSize()
+local banana = { img=img, x=150, y=150, dx=dx, dy=dy,dir_x = 5 ,dir_y= 10 } --x,y = posicion y dir_x,dir_y = direccion de movimiento
+
+
+--canvas:drawRect (mode, x, y, w, h)
+--crea la pocicion inicial del las paletas del pong
+local x = 200 --posicion inicial del cuadro de juego
+local y = 100 --posicion inicial del cuadro de juego
+local width =400  	--ancho  del cuadro de juego
+local height = 400  --alto  del cuadro de juego
+local fx, fy = width, height 
+local fondo = { x=0, y=0, dx=fx, dy=fy } -- genera una area en la cual este contenido todo 
+
+-- Función de redibujado:
+-- Llamada por cada tecla presionada
+-- primero el fondo, luego la banana y al final el mono
+function redraw_easter_egg ()
+	canvas:clear()
+	canvas:attrColor('white',x,y,fx,fy)
+	canvas:drawRect('fill', x,y, fx,fy)
+	canvas:compose(x + banana.x, y + banana.y, banana.img)
+	canvas:compose(x + monkey.x, y + monkey.y, monkey.img)
+	canvas:attrColor(0xBF,0xBF,0xBF,0x00)
+	canvas:flush()
+end
+
+-- Funcao de colisión:
+-- llamada por cada tecla presionada
+-- evalúa si el mono está encima de la banana
+function collide (A, B)
+	local ax1, ay1 = A.x, A.y
+	local ax2, ay2 = ax1+A.dx, ay1+A.dy
+	local bx1, by1 = B.x, B.y
+	local bx2, by2 = bx1+B.dx, by1+B.dy
+
+	if ax1 > bx2 then
+		return false
+	elseif bx1 > ax2 then
+		return false
+	elseif ay1 > by2 then
+		return false
+	elseif by1 > ay2 then
+		return false
+	end
+
+	return true
+end
+
+local IGNORE = false
+
+--funcion que mueve el objeto a trapar
+local function mover_objeto( )
+	-- body
+
+	local dir_x = 10
+	local dir_y = 10
+
+
+	local ax1, ay1 = banana.x , banana.y   --puntos superiores del objeto
+	local ax2, ay2 = ax1+ banana.dx , ay1 + banana.dy --puntos inferiores del objeto
+	local bx1, by1 = fondo.x, fondo.y    --punto superio del fondo
+	local bx2, by2 = bx1 + fondo.dx, by1 + fondo.dy --punto inferior del fondo
+
+	if ax1 <= bx1 then  --pared
+		banana.dir_x = -banana.dir_x
+	end
+	if ax2 >= bx2 then
+		banana.dir_x = -banana.dir_x
+	end
+	if ay1 <= by1 then
+		banana.dir_y = -banana.dir_y
+	end
+	if ay2 >= by2 then
+		banana.dir_y = -banana.dir_y
+	end
+
+
+	banana.y = banana.y + banana.dir_y
+	banana.x = banana.x + banana.dir_x
+	
+
+end
+
+-- evaluar si el mono está sobre la banana
+
+function choque(  )
+	-- body
+	if collide(monkey, banana) then
+			-- si lo está, señal de finalizacion
+			event.post {
+                class  = 'ncl',
+                type   = 'presentation',
+                label  = 'fin',
+                action = 'start',
+            }
+			-- e ignora os eventos posteriores
+			IGNORE = true
+		end
+end
+
+function timer_easter_egg( )
+	-- body
+	mover_objeto( )
+	choque()
 end
 
 
@@ -279,7 +407,11 @@ function temporizador ()
 	else
 		return event.timer(frecuencia_reloj,
 			function()
-				timer_pong()
+				if easter_egg_activate == 0 then
+					timer_pong()
+				else
+					timer_easter_egg()
+				end
 				redraw()
 				reloj()
 				temporizador( )
@@ -354,23 +486,56 @@ function teclas_info( evt)
 			
 			mostrar_info= -mostrar_info
 		end
+		if evt.key == 'CURSOR_DOWN' then
+			
+			easter_egg_activate = 1
+		end
 	end
 end
 
+function teclas_easter_egg( evt)
+	-- Sólo eventos de tecla son de interes
+	if evt.class == 'key' and evt.type == 'press'
+	then
+		-- Solo las flechas que mueven al mono
+		if evt.key == 'CURSOR_UP' then
+			if ( (monkey.y - 10 ) >= 0 )then
+				monkey.y = monkey.y - 10
+			end
+		elseif evt.key == 'CURSOR_DOWN' then
+			if ( (monkey.y +10 ) <= ( fy - monkey.dy ) )then
+				monkey.y = monkey.y + 10
+			end
+		elseif evt.key == 'CURSOR_LEFT' then
+			if ( (monkey.x - 10 ) >=  0 )then
+				monkey.x = monkey.x - 10
+			end
+		elseif evt.key == 'CURSOR_RIGHT' then
+			if ( (monkey.x +10 ) <= ( fx - monkey.dx ) )then
+				monkey.x = monkey.x + 10
+			end
+		end
 
+        -- evaluar si el mono está sobre la banana
+		--choque()
+	end
+
+end
 
 -- Funcion de tratamiento de eventos:
 function handler (evt)
 	if IGNORE then
 		return
 	end
-
-	if compara_tiempo_reclame() then
-		teclas_pong(evt)
-	else
-		teclas_info(evt)
+	if easter_egg_activate == 0 then
+		if compara_tiempo_reclame() then
+			teclas_pong(evt)
+		else
+			teclas_info(evt)
+		end
+	else 
+		teclas_easter_egg(evt)
 	end
-	
 
     -- redesenha a tela toda
     --redraw()

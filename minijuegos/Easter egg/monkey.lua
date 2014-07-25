@@ -100,8 +100,8 @@ local function temporizador ()
 			function()
 				mover_objeto( )
 				choque()
-				 redraw()
-				 temporizador( )
+				redraw()
+				temporizador( )
 			end)
 	end
 end
