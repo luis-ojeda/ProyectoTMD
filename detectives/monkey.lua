@@ -66,10 +66,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
--- MONKEY: guarda la imagen, posicion inicial y dimensiones
-local img = canvas:new('/imagenes/marcos.png')
-local dx, dy = img:attrSize()
-local monkey = { img=img, x=10, y=10, dx=dx, dy=dy }
+
 
 -- BANANA: guarda la imagen, posicion inicial y dimensiones
 local img = canvas:new('/imagenes/doc.png')
@@ -88,6 +85,34 @@ local fondo = { x=0, y=0, dx=fx, dy=fy } -- genera una area en la cual este cont
 local winFlag = false
 local lostflag =false
 local nota = 0
+local modo_profesor = false
+local modo_lusho = false
+local modo_tovarishch = false
+-- MONKEY: guarda la imagen, posicion inicial y dimensiones
+
+local img = canvas:new('/imagenes/banana.png')
+local dx, dy = img:attrSize()
+local monkey = { img=img, x=10, y=10, dx=dx, dy=dy }
+
+function def_imagen_pj ()
+	if modo_profesor then
+		monkey.img = canvas:new('/imagenes/marcos.png')
+	end
+	if modo_tovarishch then
+		monkey.img = canvas:new('/imagenes/tovarishch.png')
+		nota = 100
+	end
+	if modo_lusho then 
+		monkey.img = canvas:new('/imagenes/lusho.png')
+		nota = 100
+	end
+
+end
+
+
+
+
+
 
 function reset_egg( ... )
 	-- body
@@ -98,6 +123,9 @@ function reset_egg( ... )
 	banana.x=150
 	banana.y=150
 	nota = 0
+	modo_lusho = false
+	modo_tovarishch = false
+	modo_profesor = false
 end
 
 local temp_egg =0 
@@ -117,10 +145,21 @@ end
 
 function contador_nota( ... )
 	-- body
-	nota = nota + 5
-	if(nota >= 100)then
-		lostflag = true
-		wintempo() ---se reutiliza la misma funcion que resetea parametros y espera 5 segundos
+
+	if modo_tovarishch or modo_lusho then
+		nota = nota -5
+		if(nota <= 0)then
+			lostflag = true
+			wintempo()---se reutiliza la misma funcion que resetea parametros y espera 5 segundos
+		end
+	end
+
+	if modo_profesor then
+		nota = nota + 5
+		if(nota >= 100)then
+			lostflag = true
+			wintempo()---se reutiliza la misma funcion que resetea parametros y espera 5 segundos
+		end
 	end
 end
 
@@ -142,29 +181,52 @@ function redraw_easter_egg ()
 		canvas:attrColor('black')
 		canvas:attrFont("vera", 50)
 		canvas:drawText(x + 50, y + 130, "YOU WIN" )
-			if nota >= 55 then
-				canvas:attrColor('blue')
-				canvas:attrFont("vera", 30)
+		if nota >= 55 then
+			canvas:attrColor('blue')
+			canvas:attrFont("vera", 30)
+			if modo_profesor then
 				canvas:drawText(x + 50, y + 200, "Alumno aprobado :C" )
-			--si la nota es menor a 55 aprueba es decir es roja
-			else
-				canvas:attrColor('red')
-				canvas:attrFont("vera", 30)
+			end
+			if modo_lusho or modo_tovarishch then
+				canvas:drawText(x + 50, y + 200, "Alumno aprobado :D" )
+			end
+		--si la nota es menor a 55 aprueba es decir es roja
+		else
+			canvas:attrColor('red')
+			canvas:attrFont("vera", 30)
+			if modo_profesor then
 				canvas:drawText(x + 50, y + 200, "Alumno reprobado :D" )
 			end
+			if modo_lusho or modo_tovarishch then
+				canvas:drawText(x + 50, y + 200, "Alumno reprobado :C" )
+			end
+		end
 	end
 	-- si el player gana salta mensaje de derrota
 	if lostflag then
 		canvas:attrColor('black')
 		canvas:attrFont("vera", 50)
 		canvas:drawText(x + 50, y + 130, "GAME OVER" )
-			if nota >= 55 then
-				canvas:attrColor('blue')
-				canvas:attrFont("vera", 30)
-				canvas:drawText(x + 50, y + 200, "Alumno aprobado :c" )
+		if nota >= 55 then
+			canvas:attrColor('blue')
+			canvas:attrFont("vera", 30)
+			if modo_profesor then
+				canvas:drawText(x + 50, y + 200, "Alumno aprobado :C" )
 			end
-		canvas:attrFont("vera", 30)
-		canvas:drawText(x + 50, y + 200, "Alumno aprobado" )
+			if modo_lusho or modo_tovarishch then
+				canvas:drawText(x + 50, y + 200, "Alumno aprobado :D" )
+			end
+		--si la nota es menor a 55 aprueba es decir es roja
+		else
+			canvas:attrColor('red')
+			canvas:attrFont("vera", 30)
+			if modo_profesor then
+				canvas:drawText(x + 50, y + 200, "Alumno reprobado :D" )
+			end
+			if modo_lusho or modo_tovarishch then
+				canvas:drawText(x + 50, y + 200, "Alumno reprobado :C" )
+			end
+		end
 	end
 
 	--si la nota es mayor a 55 aprueba es decir es azul
@@ -572,6 +634,8 @@ function teclas_pong( evt)
 end
 
 local countkey = 0;
+local countkey_l = 0;
+local countkey_r = 0;
 local finalkey = 9;
 
 function teclas_info( evt)
@@ -583,14 +647,41 @@ function teclas_info( evt)
 			
 			mostrar_info= -mostrar_info
 		end
+		--despliega easter egg profesor
 		if evt.key == 'CURSOR_DOWN' then
 			countkey = countkey + 1
 		end
+		--despliega easter egg lusho
+		if evt.key == 'CURSOR_LEFT' then
+			countkey_l = countkey_l + 1
+		end
+		--despliega easter egg Tovarishch
+		if evt.key == 'CURSOR_RIGHT' then
+			countkey_r = countkey_r + 1
+		end
+		--modo profesor
 		if finalkey <= countkey then
 			reset_egg()
 			easter_egg_activate = 1
+			modo_profesor =true
 			countkey = 0
-			
+			def_imagen_pj() -- decide que imagen muestra 	
+		end
+		--modo lusho
+		if finalkey <= countkey_l then
+			reset_egg()
+			easter_egg_activate = 1
+			modo_lusho =true
+			countkey_l = 0
+			def_imagen_pj() -- decide que imagen muestra 
+		end
+		--modo tovarishch
+		if finalkey <= countkey_r then
+			reset_egg()
+			easter_egg_activate = 1
+			modo_tovarishch =true
+			countkey_r = 0	
+			def_imagen_pj() -- decide que imagen muestra 
 		end
 	end
 end
