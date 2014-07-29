@@ -1,0 +1,606 @@
+
+   --------------------------| Ginga.ar 2.1.0 (3250) |--------------------------
+[canvas::System] Using system: use=gtk
+[canvas::player] Using player: use=vlc
+[canvas::vlc] Initialize
+Event in input.lua started:
+class:ncl
+type:presentation
+nil value
+action:start
+nil name
+nil key
+label:
+Event in google.lua started:
+class:ncl
+type:presentation
+nil value
+action:start
+nil name
+nil key
+label:
+nil error
+nil connection
+Event in output.lua started:
+class:ncl
+type:presentation
+nil value
+action:start
+nil name
+nil key
+label:
+[canvas::gtk::System] Main loop begin
+[gingaplayer::Device] Create player: type=lua, schema=file, body=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/input.lua, mime=
+[gingaplayer::LuaPlayer] Start play, source=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/input.lua
+[gingaplayer::Device] Create player: type=lua, schema=file, body=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/google.lua, mime=
+[gingaplayer::LuaPlayer] Start play, source=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/google.lua
+[gingaplayer::Device] Create player: type=lua, schema=file, body=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/output.lua, mime=
+[gingaplayer::LuaPlayer] Start play, source=/home/mzuniga/CURSOS/TMD/GINGA/workspace/LUA/EJEMPLO-04/output.lua
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:6
+nil label
+Event in input.lua started:
+class:ncl
+type:attribution
+value:n
+action:start
+name:text
+nil key
+nil label
+Event in input.lua started:
+class:ncl
+type:attribution
+value:n
+action:start
+name:text
+nil key
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:2
+nil label
+Event in input.lua started:
+class:ncl
+type:attribution
+value:nc
+action:start
+name:text
+nil key
+nil label
+Event in input.lua started:
+class:ncl
+type:attribution
+value:nc
+action:start
+name:text
+nil key
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil connection
+Event in output.lua started:
+class:key
+type:press
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in input.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+Event in google.lua started:
+class:key
+type:release
+nil value
+nil action
+nil name
+key:5
+nil label
+nil error
+nil 
