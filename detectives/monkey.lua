@@ -722,9 +722,93 @@ function teclas_easter_egg( evt)
 
 end
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--
+--																					Conexion a Servidor
+--
+--
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+local typeSend = 'start'
+
+function tcp_handler(evt)
+	if evt.class == 'tcp' then
+		-- In case of successful connection
+		if evt.type == 'connect' and evt.connection ~= nil then
+			-- Then, send request
+			event.post {
+				class = 'tcp',
+				type = 'data',
+				connection = evt.connection, 
+				value = 'GET /register.php?type='..typeSend..'\n',
+				timeout = '10000',
+			}
+			return
+			-- Data received:
+		elseif evt.type == 'data' and evt.connection ~= nil then
+			result = evt.value
+			--result = string.match(result, 'Location: http://(.-)\r?\n') or 'No encontrado.'
+			--result = string.match(result, 'Location: (.-)\r?\n') or 'No encontrado.'
+			print('Result ='..result)
+
+			-- event.post {
+			-- 	class = 'ncl',
+			-- 	type  = 'attribution',
+			-- 	name  = 'result',
+			-- 	value = result,
+			-- 	action = 'start',
+			-- }
+			--
+			-- event.post {
+			-- 	class = 'ncl',
+			-- 	type  = 'attribution',
+			-- 	name  = 'result',
+			-- 	value = result,
+			-- 	action = 'stop',
+			-- }
+			--
+			event.post {
+				class = 'tcp',
+				type = 'disconnect',
+				connection = evt.connection,
+			}
+		return
+
+		elseif evt.error ~= nil then
+			print('Error: '..evt.error);
+		end
+	end
+end
+
+event.register(tcp_handler)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--
+--																					Handler
+--
+--
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 -- Funcion de tratamiento de eventos:
 function handler (evt)
+	if evt.key ~= nil then print("key:"..evt.key); else print("nil key"); end
 	if IGNORE then
+		return
+	end
+	if evt.class == 'ncl' and evt.type == 'presentation' then
+		-- if evt.action == 'start' then
+		-- 	typeSend = 'start'
+		-- elseif evt.action == 'stop' then
+		-- 	typeSend = 'stop'
+		-- end
+		typeSend = evt.action
+		event.post {
+			class = 'tcp',
+			type = 'connect',
+			host = '127.0.0.1', -- to be changed
+			port = 80,
+		}
 		return
 	end
 	if easter_egg_activate == 0 then

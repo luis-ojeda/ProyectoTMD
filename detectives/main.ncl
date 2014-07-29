@@ -21,6 +21,20 @@
 		<simpleCondition role="onBegin"/>
 		<simpleAction role="start"/>
 	</causalConnector>
+	<causalConnector id="onEndStop">
+		<simpleCondition role="onEnd"/>
+		<simpleAction role="stop"/>
+	</causalConnector>
+	<causalConnector id="onKeySelectionStop">
+		<connectorParam name="tecla"/>
+		<simpleCondition role="onSelection" key="$tecla" />
+		<simpleAction role="stop" max="unbounded" />
+	</causalConnector>
+	<causalConnector id="onKeySelectionStart">
+		<connectorParam name="tecla"/>
+		<simpleCondition role="onSelection" key="$tecla" />
+		<simpleAction role="start" max="unbounded" />
+	</causalConnector>
 </connectorBase>
 
 </head>
@@ -43,6 +57,28 @@
 	<link xconnector="onBeginStart">
 		<bind role="onBegin" component="video"/>
 		<bind role="start" component="lua"/>
+	</link>
+	<link xconnector="onEndStop">
+		<bind role="onEnd" component="video"/>
+		<bind role="stop" component="lua"/>
+	</link>
+	<link xconnector="onEndStop">
+		<bind role="onEnd" component="video"/>
+		<bind role="stop" component="lua"/>
+	</link>
+	<link xconnector="onKeySelectionStop">
+		<bind role="onSelection" component="video">
+			<bindParam name="tecla" value='ENTER'/>
+		</bind>
+		<bind role="stop" component="lua"/>
+		<bind role="stop" component="video"/>
+	</link>
+	<link xconnector="onKeySelectionStart">
+		<bind role="onSelection" component="video">
+			<bindParam name="tecla" value='F3'/>
+		</bind>
+		<bind role="start" component="lua"/>
+		<bind role="start" component="video"/>
 	</link>
 	<!--
 	<link xconnector="onBeginStart">
