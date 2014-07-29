@@ -26,8 +26,8 @@ local tiempo_reclame={
 						horas_fin= 0+0, 
 						minutos_inicio= 0+0, 
 						minutos_fin= 0+0, 
-						segundos_inicio= 30+0, 
-						segundos_fin= 31+0,
+						segundos_inicio= 10+0, 
+						segundos_fin= 20+0,
 						milisegundos_inicio= 0+0,
 						milisegundos_fin= 0+0
 					}
@@ -68,36 +68,45 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-
 -- MONKEY: guarda la imagen, posicion inicial y dimensiones
-local img = canvas:new('monkey.png')
+local img = canvas:new('/imagenes/marcos.png')
 local dx, dy = img:attrSize()
 local monkey = { img=img, x=10, y=10, dx=dx, dy=dy }
 
 -- BANANA: guarda la imagen, posicion inicial y dimensiones
-local img = canvas:new('banana.png')
+local img = canvas:new('/imagenes/doc.png')
 local dx, dy = img:attrSize()
 local banana = { img=img, x=150, y=150, dx=dx, dy=dy,dir_x = 5 ,dir_y= 10 } --x,y = posicion y dir_x,dir_y = direccion de movimiento
+
+-- WIN: guarda la imagen, posicion inicial y dimensiones
+local img = canvas:new('win.jpg')
+local dx, dy = img:attrSize()
+local winjpg = { img=img, x=150, y=150, dx=dx, dy=dy,dir_x = 5 ,dir_y= 10 } --x,y = posicion y dir_x,dir_y = direccion de movimiento
 
 
 --canvas:drawRect (mode, x, y, w, h)
 --crea la pocicion inicial del las paletas del pong
 local x = 200 --posicion inicial del cuadro de juego
 local y = 100 --posicion inicial del cuadro de juego
-local width =400  	--ancho  del cuadro de juego
+local width = 400  	--ancho  del cuadro de juego
 local height = 400  --alto  del cuadro de juego
-local fx, fy = width, height 
+local fx, fy = width, height
+local fex, fey = fx, fy
 local fondo = { x=0, y=0, dx=fx, dy=fy } -- genera una area en la cual este contenido todo 
+local winFlag = false
 
 -- Función de redibujado:
 -- Llamada por cada tecla presionada
 -- primero el fondo, luego la banana y al final el mono
 function redraw_easter_egg ()
 	canvas:clear()
-	canvas:attrColor('white',x,y,fx,fy)
+	canvas:attrColor('white')
 	canvas:drawRect('fill', x,y, fx,fy)
 	canvas:compose(x + banana.x, y + banana.y, banana.img)
 	canvas:compose(x + monkey.x, y + monkey.y, monkey.img)
+	if winFlag then
+		canvas:compose(x - winjpg.dx, y, winjpg.img)
+	end
 	canvas:attrColor(0xBF,0xBF,0xBF,0x00)
 	canvas:flush()
 end
@@ -129,7 +138,9 @@ local IGNORE = false
 --funcion que mueve el objeto a trapar
 local function mover_objeto( )
 	-- body
-
+	if winFlag then
+		return
+	end
 	local dir_x = 10
 	local dir_y = 10
 
@@ -172,7 +183,9 @@ function choque(  )
                 action = 'start',
             }
 			-- e ignora os eventos posteriores
-			IGNORE = true
+			--IGNORE = true
+			winFlag = true
+			wintempo()
 		end
 end
 
@@ -182,9 +195,9 @@ function timer_easter_egg( )
 	choque()
 end
 
-
-
-
+--function drawWin()
+	-- WIN: guarda la imagen, posicion inicial y dimensiones
+	
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
@@ -197,7 +210,7 @@ end
 --crea la pocicion inicial del las paletas del pong
 local x = 500 --posicion inicial del cuadro de juego
 local y = 300 --posicion inicial del cuadro de juego
-local width =200  	--ancho  del cuadro de juego
+local width = 200  	--ancho  del cuadro de juego
 local height = 200  --alto  del cuadro de juego
 local fx, fy = width, height 
 local pong_user = { x= 10, y=10, dx=20, dy=50 }
@@ -449,6 +462,13 @@ end
 
 temporizador( )
 
+function wintempo()
+	event.timer(5000,function()
+		easter_egg_activate = 0
+		end)
+end
+			
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
 --																					Manejo de eventos de tecla
@@ -478,6 +498,9 @@ function teclas_pong( evt)
 	end
 end
 
+local countkey = 0;
+local finalkey = 9;
+
 function teclas_info( evt)
 	 --Sólo eventos de tecla son de interes
 	if evt.class == 'key' and evt.type == 'press'
@@ -488,7 +511,9 @@ function teclas_info( evt)
 			mostrar_info= -mostrar_info
 		end
 		if evt.key == 'CURSOR_DOWN' then
-			
+			countkey = countkey + 1
+		end
+		if finalkey <= countkey then
 			easter_egg_activate = 1
 		end
 	end
@@ -496,23 +521,30 @@ end
 
 function teclas_easter_egg( evt)
 	-- Sólo eventos de tecla son de interes
+	if winFlag then
+		return
+	end
 	if evt.class == 'key' and evt.type == 'press'
 	then
 		-- Solo las flechas que mueven al mono
 		if evt.key == 'CURSOR_UP' then
+			-- limite superior
 			if ( (monkey.y - 10 ) >= 0 )then
 				monkey.y = monkey.y - 10
 			end
+			-- limite inferior
 		elseif evt.key == 'CURSOR_DOWN' then
-			if ( (monkey.y +10 ) <= ( fy - monkey.dy ) )then
+			if ( (monkey.y +10 ) <= ( fey - monkey.dy ) )then
 				monkey.y = monkey.y + 10
 			end
+			-- limite izquierdo
 		elseif evt.key == 'CURSOR_LEFT' then
 			if ( (monkey.x - 10 ) >=  0 )then
 				monkey.x = monkey.x - 10
 			end
+			-- limite derecho
 		elseif evt.key == 'CURSOR_RIGHT' then
-			if ( (monkey.x +10 ) <= ( fx - monkey.dx ) )then
+			if ( (monkey.x +10 ) <= ( fex - monkey.dx ) )then
 				monkey.x = monkey.x + 10
 			end
 		end
