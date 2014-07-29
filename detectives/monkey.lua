@@ -4,7 +4,7 @@ local width, height = canvas:attrSize()   -- pega as dimensões da região
 local Bx, By = width, height 
 local IGNORE = false 
 
-local easter_egg_activate = 1
+local easter_egg_activate = 0
 --variable para mantener el tiempo de reproduccion del archivo y poder manejar las propagandas
 local tiempo = {horas= 0, minutos= 0, segundos= 0, milisegundos= 0}
 
@@ -25,7 +25,7 @@ local tiempo_reclame={
 						minutos_inicio= 0+0, 
 						minutos_fin= 0+0, 
 						segundos_inicio= 10+0, 
-						segundos_fin= 20+0,
+						segundos_fin= 11+0,
 						milisegundos_inicio= 0+0,
 						milisegundos_fin= 0+0
 					}
@@ -76,12 +76,6 @@ local img = canvas:new('/imagenes/doc.png')
 local dx, dy = img:attrSize()
 local banana = { img=img, x=150, y=150, dx=dx, dy=dy,dir_x = 5 ,dir_y= 10 } --x,y = posicion y dir_x,dir_y = direccion de movimiento
 
--- WIN: guarda la imagen, posicion inicial y dimensiones
-local img = canvas:new('win.jpg')
-local dx, dy = img:attrSize()
-local winjpg = { img=img, x=150, y=150, dx=dx, dy=dy,dir_x = 5 ,dir_y= 10 } --x,y = posicion y dir_x,dir_y = direccion de movimiento
-
-
 --canvas:drawRect (mode, x, y, w, h)
 --crea la pocicion inicial del las paletas del pong
 local x = 200 --posicion inicial del cuadro de juego
@@ -92,28 +86,41 @@ local fx, fy = width, height
 local fex, fey = fx, fy
 local fondo = { x=0, y=0, dx=fx, dy=fy } -- genera una area en la cual este contenido todo 
 local winFlag = false
+local lostflag =false
+local nota = 0
 
-
+function reset_egg( ... )
+	-- body
+	winFlag = false
+	lostflag = false
+	monkey.x=10
+	monkey.y=10
+	banana.x=150
+	banana.y=150
+	nota = 0
+end
 
 local temp_egg =0 
 
 function reloj_easter_egg( ... )
 	-- body
-	if winFlag then
+	if winFlag or lostflag then
 		return
 	end
-	temp_egg =temp_egg + 1
+	temp_egg = temp_egg + 1
 	if temp_egg >= 5 then
 		temp_egg = 0
 		contador_nota()
 	end
 end
 
-local nota = 0
+
 function contador_nota( ... )
 	-- body
-	nota =nota + 5
-	if(nota <= 100)then
+	nota = nota + 5
+	if(nota >= 100)then
+		lostflag = true
+		wintempo() ---se reutiliza la misma funcion que resetea parametros y espera 5 segundos
 	end
 end
 
@@ -130,9 +137,36 @@ function redraw_easter_egg ()
 	canvas:drawRect('fill', x,y, fx,fy)
 	canvas:compose(x + banana.x, y + banana.y, banana.img)
 	canvas:compose(x + monkey.x, y + monkey.y, monkey.img)
+	-- si el player gana salta mensaje de victoria
 	if winFlag then
-		canvas:compose(x - winjpg.dx, y, winjpg.img)
+		canvas:attrColor('black')
+		canvas:attrFont("vera", 50)
+		canvas:drawText(x + 50, y + 130, "YOU WIN" )
+			if nota >= 55 then
+				canvas:attrColor('blue')
+				canvas:attrFont("vera", 30)
+				canvas:drawText(x + 50, y + 200, "Alumno aprobado :C" )
+			--si la nota es menor a 55 aprueba es decir es roja
+			else
+				canvas:attrColor('red')
+				canvas:attrFont("vera", 30)
+				canvas:drawText(x + 50, y + 200, "Alumno reprobado :D" )
+			end
 	end
+	-- si el player gana salta mensaje de derrota
+	if lostflag then
+		canvas:attrColor('black')
+		canvas:attrFont("vera", 50)
+		canvas:drawText(x + 50, y + 130, "GAME OVER" )
+			if nota >= 55 then
+				canvas:attrColor('blue')
+				canvas:attrFont("vera", 30)
+				canvas:drawText(x + 50, y + 200, "Alumno aprobado :c" )
+			end
+		canvas:attrFont("vera", 30)
+		canvas:drawText(x + 50, y + 200, "Alumno aprobado" )
+	end
+
 	--si la nota es mayor a 55 aprueba es decir es azul
 	if nota >= 55 then
 		canvas:attrColor('blue')
@@ -175,7 +209,7 @@ local IGNORE = false
 --funcion que mueve el objeto a trapar
 local function mover_objeto( )
 	-- body
-	if winFlag then
+	if winFlag or lostflag then
 		return
 	end
 	local dir_x = 10
@@ -274,7 +308,6 @@ function timer_pong( ... )
 	rebote_paleta()
 	puntaje()
 end
-
 
 
 function redraw_pong()
@@ -504,9 +537,10 @@ temporizador( )
 function wintempo()
 	event.timer(5000,function()
 		easter_egg_activate = 0
+		reset_egg()
 		end)
-end
-			
+
+end	
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
@@ -553,14 +587,17 @@ function teclas_info( evt)
 			countkey = countkey + 1
 		end
 		if finalkey <= countkey then
+			reset_egg()
 			easter_egg_activate = 1
+			countkey = 0
+			
 		end
 	end
 end
 
 function teclas_easter_egg( evt)
 	-- Sólo eventos de tecla son de interes
-	if winFlag then
+	if winFlag or lostflag then
 		return
 	end
 	if evt.class == 'key' and evt.type == 'press'
