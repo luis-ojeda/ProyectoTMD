@@ -1,12 +1,10 @@
 
-local img = canvas:new('monkey.png')
-local dx, dy = img:attrSize()
 --local info = { img=img, x=fx -50, y=fy -50, dx=dx, dy=dy }
 local width, height = canvas:attrSize()   -- pega as dimensões da região
 local Bx, By = width, height 
 local IGNORE = false 
 
-local easter_egg_activate = 0
+local easter_egg_activate = 1
 --variable para mantener el tiempo de reproduccion del archivo y poder manejar las propagandas
 local tiempo = {horas= 0, minutos= 0, segundos= 0, milisegundos= 0}
 
@@ -95,6 +93,34 @@ local fex, fey = fx, fy
 local fondo = { x=0, y=0, dx=fx, dy=fy } -- genera una area en la cual este contenido todo 
 local winFlag = false
 
+
+
+local temp_egg =0 
+
+function reloj_easter_egg( ... )
+	-- body
+	if winFlag then
+		return
+	end
+	temp_egg =temp_egg + 1
+	if temp_egg >= 5 then
+		temp_egg = 0
+		contador_nota()
+	end
+end
+
+local nota = 0
+function contador_nota( ... )
+	-- body
+	nota =nota + 5
+	if(nota <= 100)then
+	end
+end
+
+
+
+
+
 -- Función de redibujado:
 -- Llamada por cada tecla presionada
 -- primero el fondo, luego la banana y al final el mono
@@ -106,6 +132,17 @@ function redraw_easter_egg ()
 	canvas:compose(x + monkey.x, y + monkey.y, monkey.img)
 	if winFlag then
 		canvas:compose(x - winjpg.dx, y, winjpg.img)
+	end
+	--si la nota es mayor a 55 aprueba es decir es azul
+	if nota >= 55 then
+		canvas:attrColor('blue')
+		canvas:attrFont("vera", 24)
+		canvas:drawText(x + 40, y + 10, tostring (nota) )
+		--si la nota es menor a 55 aprueba es decir es roja
+	else
+		canvas:attrColor('red')
+		canvas:attrFont("vera", 24)
+		canvas:drawText(x + 40, y + 10, tostring (nota) )
 	end
 	canvas:attrColor(0xBF,0xBF,0xBF,0x00)
 	canvas:flush()
@@ -193,7 +230,9 @@ function timer_easter_egg( )
 	-- body
 	mover_objeto( )
 	choque()
+	reloj_easter_egg()
 end
+
 
 --function drawWin()
 	-- WIN: guarda la imagen, posicion inicial y dimensiones
@@ -404,7 +443,7 @@ redraw_detective()
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --
---																					Funciones de tiempo
+--														Funciones de tiempo
 --
 --
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
